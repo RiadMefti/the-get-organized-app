@@ -22,7 +22,7 @@ type Service interface {
 	Health() map[string]string
 	GetUserByEmail(email string) (types.UserDB, error)
 
-	CreateUser(email string, hashedPassword string) error
+	CreateUser(email string, hashedPassword string) (string, error)
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
 	Close() error
@@ -124,17 +124,17 @@ func (s *service) GetUserByEmail(email string) (types.UserDB, error) {
 
 	return user, nil
 }
-func (s *service) CreateUser(email string, hashedPassword string) error {
+func (s *service) CreateUser(email string, hashedPassword string) (string, error) {
 	newUUID, err := uuid.NewRandom() // Generate a new random UUID.
 	if err != nil {
-		return err // Handle error if UUID generation fails.
+		return "", err // Handle error if UUID generation fails.
 	}
 
 	_, err = s.db.Exec("INSERT INTO users (id, email, hashed_password) VALUES ($1, $2, $3)", newUUID, email, hashedPassword)
 	if err != nil {
-		return err // Handle error if the database operation fails.
+		return "", err // Handle error if the database operation fails.
 	}
-	return nil
+	return newUUID.String(), nil
 }
 
 // Close closes the database connection.

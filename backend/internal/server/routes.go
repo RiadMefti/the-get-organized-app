@@ -5,6 +5,7 @@ import (
 	"backend/internal/types"
 	"backend/internal/utils"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -52,11 +53,21 @@ func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
-	err = auth.CreateUser(s.db, userRegistration)
+	id, err := auth.CreateUser(s.db, userRegistration)
 	if err != nil {
 		utils.WriteError(w, http.StatusConflict, err)
 		return
 	}
+
+	jwt, jwtErr := auth.GenerateToken(fmt.Sprint(id), userRegistration.Email)
+	if jwtErr != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusCreated, struct {
+		Jwt string `json:"jwt"`
+	}{Jwt: jwt})
 }
 
 func (s *Server) loginHandler(w http.ResponseWriter, r *http.Request) {
@@ -66,14 +77,20 @@ func (s *Server) loginHandler(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
-	token, err := auth.AuthentificateUser(s.db, userLogin)
-	log.Println(token)
-	log.Println(err)
+	id, err := auth.AuthentificateUser(s.db, userLogin)
+
 	if err != nil {
 		utils.WriteError(w, http.StatusUnauthorized, err)
 		return
 	}
 
-	jsonResp, _ := json.Marshal(token)
-	_, _ = w.Write(jsonResp)
+	jwt, jwtErr := auth.GenerateToken(fmt.Sprint(id), userLogin.Email)
+	if jwtErr != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusCreated, struct {
+		Jwt string `json:"jwt"`
+	}{Jwt: jwt})
 }

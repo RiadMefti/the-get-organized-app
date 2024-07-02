@@ -12,16 +12,16 @@ func validatePassword(password string, hashedPassword string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password)) == nil
 }
 
-func AuthentificateUser(db database.Service, userLogin types.UserLogin) (bool, error) {
+func AuthentificateUser(db database.Service, userLogin types.UserLogin) (string, error) {
 
 	user, err := db.GetUserByEmail(userLogin.Email)
 	if err != nil {
-		return false, err
+		return "", err
 	}
 
 	if !validatePassword(userLogin.Password, user.HashedPassword) {
-		return false, errors.New("invalid password")
+		return "", errors.New("invalid password")
 	}
 
-	return true, nil
+	return user.ID.String(), nil
 }

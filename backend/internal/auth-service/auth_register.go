@@ -37,20 +37,20 @@ func validateUserRegistration(db database.Service, user types.UserRegistration) 
 	return nil
 }
 
-func CreateUser(db database.Service, user types.UserRegistration) error {
+func CreateUser(db database.Service, user types.UserRegistration) (string, error) {
 	err := validateUserRegistration(db, user)
 	if err != nil {
-		return err
+		return "", err
 	}
 	hashedPassword, err := hashPassword(user.Password)
 	if err != nil {
-		return err
+		return "", err
 	}
-	err = db.CreateUser(user.Email, hashedPassword)
+	id, err := db.CreateUser(user.Email, hashedPassword)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return id, nil
 }
 
 func isPasswordMatch(password string, copyPassword string) (bool, error) {
