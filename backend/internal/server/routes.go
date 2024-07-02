@@ -1,6 +1,9 @@
 package server
 
 import (
+	"backend/internal/auth-service"
+	"backend/internal/types"
+	"backend/internal/utils"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -16,6 +19,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.Get("/", s.HelloWorldHandler)
 
 	r.Get("/health", s.healthHandler)
+
+	r.Post("/register", s.registerHandler)
 
 	return r
 }
@@ -35,4 +40,19 @@ func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) healthHandler(w http.ResponseWriter, r *http.Request) {
 	jsonResp, _ := json.Marshal(s.db.Health())
 	_, _ = w.Write(jsonResp)
+}
+
+func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
+
+	var userRegistration types.UserRegistration
+	err := utils.ParseJSON(r, &userRegistration)
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+	err = auth.CreateUser(s.db, userRegistration)
+	if err != nil {
+		utils.WriteError(w, http.StatusConflict, err)
+		return
+	}
 }
