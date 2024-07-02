@@ -22,6 +22,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.Post("/register", s.registerHandler)
 
+	r.Post("/login", s.loginHandler)
+
 	return r
 }
 
@@ -55,4 +57,23 @@ func (s *Server) registerHandler(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusConflict, err)
 		return
 	}
+}
+
+func (s *Server) loginHandler(w http.ResponseWriter, r *http.Request) {
+	var userLogin types.UserLogin
+	err := utils.ParseJSON(r, &userLogin)
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+	token, err := auth.AuthentificateUser(s.db, userLogin)
+	log.Println(token)
+	log.Println(err)
+	if err != nil {
+		utils.WriteError(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	jsonResp, _ := json.Marshal(token)
+	_, _ = w.Write(jsonResp)
 }
