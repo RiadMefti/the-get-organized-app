@@ -2,24 +2,28 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCheckAuth, useLogin } from "../hooks/useAuth";
 import AuthForm from "../components/AuthForm";
-import { Typography } from "antd";
+import { Typography, notification } from "antd";
+
 const Login: React.FC = () => {
   const mutation = useLogin();
   const navigate = useNavigate();
 
   const isAuth = useCheckAuth();
 
-  const { Title } = Typography;
-
   const handleLogin = (email: string, password: string) => {
     mutation.mutate(
       { email, password },
       {
         onSuccess: () => {
-          navigate("/dashboard");
+          navigate("/");
         },
-        onError: () => {
-          alert("Login failed");
+        onError: (error: any) => {
+          notification.error({
+            message: "Login Error",
+            description:
+              error.response?.data?.error || "Login failed. Please try again.",
+            duration: 3,
+          });
         },
       }
     );
@@ -29,7 +33,8 @@ const Login: React.FC = () => {
     if (isAuth.data === true) {
       navigate("/dashboard");
     }
-  }, [isAuth]);
+  }, [isAuth, navigate]);
+
   if (isAuth.isLoading) {
     return (
       <p
@@ -44,6 +49,7 @@ const Login: React.FC = () => {
       </p>
     );
   }
+
   return (
     <div>
       <AuthForm

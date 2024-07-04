@@ -24,7 +24,7 @@ axiosInstance.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       // Handle unauthorized access
       localStorage.removeItem('token');
-      window.location.href = '/login';
+
     }
     return Promise.reject(error);
   }

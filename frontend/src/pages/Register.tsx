@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCheckAuth, useRegister } from "../hooks/useAuth";
 import AuthForm from "../components/AuthForm";
-import { Typography } from "antd";
+import { notification, Typography } from "antd";
 
 const Register: React.FC = () => {
   const mutation = useRegister();
@@ -19,10 +19,16 @@ const Register: React.FC = () => {
         { email, password, copyPassword },
         {
           onSuccess: () => {
-            navigate("/login");
+            navigate("/");
           },
-          onError: () => {
-            alert("Registration failed");
+          onError: (error: any) => {
+            notification.error({
+              message: "Register Error",
+              description:
+                error.response?.data?.error ||
+                "REgister failed. Please try again.",
+              duration: 3,
+            });
           },
         }
       );
