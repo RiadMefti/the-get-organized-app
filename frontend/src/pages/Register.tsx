@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCheckAuth, useRegister } from "../hooks/useAuth";
 import AuthForm from "../components/AuthForm";
+import { Typography } from "antd";
 
 const Register: React.FC = () => {
   const mutation = useRegister();
   const navigate = useNavigate();
   const isAuth = useCheckAuth();
-
+  const { Title } = Typography;
   const handleRegister = (
     email: string,
     password: string,
@@ -49,8 +50,11 @@ const Register: React.FC = () => {
     );
   }
   return (
-    <div>
-      <h2>Register</h2>
+    <div
+      style={{
+        width: "100vw",
+      }}
+    >
       <AuthForm onSubmit={handleRegister} buttonText="Register" />
       {mutation.isPending && <p>Loading...</p>}
     </div>

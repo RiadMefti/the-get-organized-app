@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Typography } from "antd";
+import { useNavigate } from "react-router-dom";
 
 interface AuthFormProps {
   onSubmit: (email: string, password: string, copyPassword?: string) => void;
@@ -6,37 +9,103 @@ interface AuthFormProps {
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, buttonText }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [copyPassword, setCopyPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [copyPassword, setCopyPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const { Title } = Typography;
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (values: any) => {
     if (buttonText === "Register") {
-      onSubmit(email, password, copyPassword);
+      onSubmit(values.email, values.password, values.copyPassword);
     } else {
-      onSubmit(email, password);
+      onSubmit(values.email, values.password);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Email</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      </div>
-      <div>
-        <label>Password</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-      </div>
-      {buttonText === "Register" && (
-        <div>
-          <label>Confirm Password</label>
-          <input type="password" value={copyPassword} onChange={(e) => setCopyPassword(e.target.value)} required />
-        </div>
-      )}
-      <button type="submit">{buttonText}</button>
-    </form>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        padding:'8rem',
+        alignItems: "center",
+      }}
+    >
+      <Title level={2}>{buttonText}</Title>
+      <Form
+        name="auth_form"
+        className="auth-form"
+        initialValues={{ remember: true }}
+        onFinish={handleSubmit}
+        style={{
+          width: "33%",
+        }}
+      >
+        <Form.Item
+          name="email"
+          rules={[{ required: true, message: "Please input your Email!" }]}
+        >
+          <Input
+            prefix={<MailOutlined className="site-form-item-icon" />}
+            placeholder="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[{ required: true, message: "Please input your Password!" }]}
+        >
+          <Input
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </Form.Item>
+        {buttonText === "Register" && (
+          <Form.Item
+            name="copyPassword"
+            rules={[
+              { required: true, message: "Please confirm your Password!" },
+            ]}
+          >
+            <Input
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Confirm Password"
+              value={copyPassword}
+              onChange={(e) => setCopyPassword(e.target.value)}
+              required
+            />
+          </Form.Item>
+        )}
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit" className="auth-form-button">
+            {buttonText}
+          </Button>
+          {buttonText !== "Register" ? (
+            <span>
+              {" "}
+              Or <a onClick={() => navigate("/register")}>register now!</a>
+            </span>
+          ) : (
+            <span>
+              {" "}
+              Or <a onClick={() => navigate("/login")}>Login now!</a>
+            </span>
+          )}
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 
