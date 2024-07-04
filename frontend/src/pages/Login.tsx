@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLogin } from "../hooks/useAuth";
+import { useCheckAuth, useLogin } from "../hooks/useAuth";
 import AuthForm from "../components/AuthForm";
 
 const Login: React.FC = () => {
   const mutation = useLogin();
   const navigate = useNavigate();
+
+  const isAuth = useCheckAuth();
 
   const handleLogin = (email: string, password: string) => {
     mutation.mutate(
@@ -22,11 +24,24 @@ const Login: React.FC = () => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (isAuth.data === true) {
       navigate("/dashboard");
     }
-  }, [navigate]); // Dependency array includes navigate to handle changes in navigate function
-
+  }, [isAuth]);
+  if (isAuth.isLoading) {
+    return (
+      <p
+        style={{
+          textAlign: "center",
+          marginTop: "100px",
+          fontSize: "30px",
+          color: "red",
+        }}
+      >
+        Loading...
+      </p>
+    );
+  }
   return (
     <div>
       <h2>Login</h2>

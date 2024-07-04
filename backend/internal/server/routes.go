@@ -36,6 +36,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.Post("/login", s.loginHandler)
 
+	r.Post("/isAuthenticated", s.isAuthenticatedHandler)
+
 	return r
 }
 
@@ -104,4 +106,28 @@ func (s *Server) loginHandler(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusCreated, struct {
 		Jwt string `json:"jwt"`
 	}{Jwt: jwt})
+}
+
+func (s *Server) isAuthenticatedHandler(w http.ResponseWriter, r *http.Request) {
+
+	var jwtToken types.JwtToken
+
+	err := utils.ParseJSON(r, &jwtToken)
+
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	_, err = auth.ValidateToken(jwtToken.Jwt)
+
+	if err != nil {
+		utils.WriteError(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, struct {
+		Message string `json:"message"`
+	}{Message: "Authenticated"})
+
 }

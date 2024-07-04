@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRegister } from "../hooks/useAuth";
+import { useCheckAuth, useRegister } from "../hooks/useAuth";
 import AuthForm from "../components/AuthForm";
 
 const Register: React.FC = () => {
   const mutation = useRegister();
   const navigate = useNavigate();
+  const isAuth = useCheckAuth();
 
   const handleRegister = (
     email: string,
@@ -28,11 +29,25 @@ const Register: React.FC = () => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (isAuth.data === true) {
       navigate("/dashboard");
     }
-  }, [navigate]); // Dependency array includes navigate to handle changes in navigate function
+  }, [isAuth]);
 
+  if (isAuth.isLoading) {
+    return (
+      <p
+        style={{
+          textAlign: "center",
+          marginTop: "100px",
+          fontSize: "30px",
+          color: "red",
+        }}
+      >
+        Loading...
+      </p>
+    );
+  }
   return (
     <div>
       <h2>Register</h2>
