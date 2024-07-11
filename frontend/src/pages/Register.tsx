@@ -2,13 +2,12 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCheckAuth, useRegister } from "../hooks/useAuth";
 import AuthForm from "../components/AuthForm";
-import { notification, Typography } from "antd";
+import { notification } from "antd";
 
 const Register: React.FC = () => {
   const mutation = useRegister();
   const navigate = useNavigate();
   const isAuth = useCheckAuth();
-  const { Title } = Typography;
   const handleRegister = (
     email: string,
     password: string,
