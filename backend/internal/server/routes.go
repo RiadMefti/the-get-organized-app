@@ -24,6 +24,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
+	r.Use(AuthorizationMiddlware)
+
 	r.Get("/", s.HelloWorldHandler)
 
 	r.Get("/health", s.healthHandler)

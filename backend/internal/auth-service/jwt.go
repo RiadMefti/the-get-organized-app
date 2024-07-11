@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -39,6 +40,9 @@ func GenerateToken(userID, email string) (string, error) {
 
 // ValidateToken validates the JWT token and returns the custom claims.
 func ValidateToken(tokenString string) (*CustomClaims, error) {
+	// Directly remove "Bearer " prefix if it exists
+	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+
 	claims := &CustomClaims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
