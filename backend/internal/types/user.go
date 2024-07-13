@@ -29,17 +29,3 @@ type JwtToken struct {
 	Jwt string `json:"jwt"`
 }
 
-type Objective struct {
-	ID        uuid.UUID `json:"id"`
-	UserID    uuid.UUID `json:"user_id"`
-	Type      string    `json:"type"`
-	StartDate time.Time `json:"start_date"`
-	Goals     []Goal    `json:"goals"`
-}
-
-type Goal struct {
-	ID          uuid.UUID `json:"id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Done        bool      `json:"done"`
-}
