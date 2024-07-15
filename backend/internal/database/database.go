@@ -30,6 +30,9 @@ type Service interface {
 	CreateObjective(start_date time.Time, objType string, userID uuid.UUID) error
 	AbandonObjective(objectiveId uuid.UUID) error
 	GetObjective(userId uuid.UUID) ([]types.Objective, error) 
+	CreateGoal(name string, description string, objectiveID uuid.UUID) error
+	UpdateGoal(id uuid.UUID, name string, description string, done bool) error
+	AbandonGoal(id uuid.UUID) error
 	Close() error
 }
 

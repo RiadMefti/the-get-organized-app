@@ -45,19 +45,22 @@ func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	resp := make(map[string]string)
 	resp["message"] = "Hello World"
 
-	uuidStr := "edb0db3b-fa66-4daa-b3c9-a03107bd50b5"
+	uuidStr := "29e7c3f5-4e72-4411-817f-15b2e11ead74"
 	parsedUUID, err := uuid.Parse(uuidStr)
 
 	if err != nil {
 		log.Fatalf("error parsing UUID. Err: %v", err)
 	}
 
-	obj, err := s.db.GetObjective(parsedUUID)
+	err = s.db.AbandonGoal(parsedUUID)
 
 	if err != nil {
+
 		log.Fatalf("error creating objective. Err: %v", err)
 	}
-	utils.WriteJSON(w, http.StatusOK, obj)
+
+	utils.WriteJSON(w, http.StatusOK, resp)
+
 }
 
 func (s *Server) healthHandler(w http.ResponseWriter, r *http.Request) {
