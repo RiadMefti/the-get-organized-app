@@ -38,6 +38,18 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.Post("/isAuthenticated", s.isAuthenticatedHandler)
 
+	r.Post("/createObjective", s.createObjectiveHandler)
+
+	r.Put("/abandonObjective", s.abandonObjectiveHandler)
+
+	r.Get("/getObjectives", s.getObjectivesHandler)
+
+	r.Post("/createGoalHandler", s.createGoalHandler)
+
+	r.Put("/updateGoalHandler", s.updateGoalHandler)
+
+	r.Put("/abandonGoalHandler", s.abandonGoalHandler)
+
 	return r
 }
 
