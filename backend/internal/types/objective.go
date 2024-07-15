@@ -29,7 +29,7 @@ type ObjectiveDB struct {
     UserID     uuid.UUID `json:"user_id"`
     StartDate  time.Time `json:"start_date"`
     Type       string    `json:"type"`
-    Abandoned  bool      `json:"abandoned"`
+    Abandonned  bool      `json:"abandoned"`
     CreatedAt  time.Time `json:"created_at"`
     UpdatedAt  time.Time `json:"updated_at"`
 }
