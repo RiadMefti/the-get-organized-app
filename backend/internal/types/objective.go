@@ -11,7 +11,7 @@ type Objective struct {
 	UserID     uuid.UUID `json:"user_id"`
 	Type       string    `json:"type"`
 	StartDate  time.Time `json:"start_date"`
-	Abandonned bool      `json:"abandonned"`
+	Abandoned bool      `json:"abandoned"`
 	Goals      []Goal    `json:"goals"`
 }
 
@@ -20,26 +20,25 @@ type Goal struct {
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Done        bool      `json:"done"`
-	Abandonned  bool      `json:"abandonned"`
+	Abandoned  bool      `json:"abandoned"`
 }
 
-
 type ObjectiveDB struct {
-    ID         uuid.UUID `json:"id"`
-    UserID     uuid.UUID `json:"user_id"`
-    StartDate  time.Time `json:"start_date"`
-    Type       string    `json:"type"`
-    Abandonned  bool      `json:"abandoned"`
-    CreatedAt  time.Time `json:"created_at"`
-    UpdatedAt  time.Time `json:"updated_at"`
+	ID         uuid.UUID `json:"id"`
+	UserID     uuid.UUID `json:"user_id"`
+	StartDate  time.Time `json:"start_date"`
+	Type       string    `json:"type"`
+	Abandoned bool      `json:"abandoned"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 type GoalDB struct {
-    ID          uuid.UUID `json:"id"`
-    Name        string    `json:"name"`
-    Description string    `json:"description"`
-    Done        bool      `json:"done"`
-    Abandoned   bool      `json:"abandoned"`
-    CreatedAt   time.Time `json:"created_at"`
-    UpdatedAt   time.Time `json:"updated_at"`
+	ID          uuid.UUID `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Done        bool      `json:"done"`
+	Abandoned   bool      `json:"abandoned"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }

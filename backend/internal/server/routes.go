@@ -1,6 +1,7 @@
 package server
 
 import (
+	"backend/internal/utils"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -8,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"github.com/google/uuid"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
@@ -43,12 +45,19 @@ func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	resp := make(map[string]string)
 	resp["message"] = "Hello World"
 
-	jsonResp, err := json.Marshal(resp)
+	uuidStr := "edb0db3b-fa66-4daa-b3c9-a03107bd50b5"
+	parsedUUID, err := uuid.Parse(uuidStr)
+
 	if err != nil {
-		log.Fatalf("error handling JSON marshal. Err: %v", err)
+		log.Fatalf("error parsing UUID. Err: %v", err)
 	}
 
-	_, _ = w.Write(jsonResp)
+	obj, err := s.db.GetObjective(parsedUUID)
+
+	if err != nil {
+		log.Fatalf("error creating objective. Err: %v", err)
+	}
+	utils.WriteJSON(w, http.StatusOK, obj)
 }
 
 func (s *Server) healthHandler(w http.ResponseWriter, r *http.Request) {

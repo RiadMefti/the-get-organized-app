@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/google/uuid"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -24,6 +25,11 @@ type Service interface {
 	CreateUser(email string, hashedPassword string) (string, error)
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
+
+	///OBJECTIVE AND GOALS//
+	CreateObjective(start_date time.Time, objType string, userID uuid.UUID) error
+	AbandonObjective(objectiveId uuid.UUID) error
+	GetObjective(userId uuid.UUID) ([]types.Objective, error) 
 	Close() error
 }
 

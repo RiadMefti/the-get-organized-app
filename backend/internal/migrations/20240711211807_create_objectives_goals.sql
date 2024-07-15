@@ -7,7 +7,7 @@ CREATE TABLE objectives (
     user_id UUID NOT NULL,
     start_date DATE NOT NULL,
     type VARCHAR(255) NOT NULL CHECK (type IN ('year', 'month', 'week')),
-    abandonned BOOLEAN NOT NULL DEFAULT FALSE,
+    abandoned BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -17,7 +17,7 @@ CREATE TABLE goals (
     name VARCHAR(255) NOT NULL,
     description TEXT,
     done BOOLEAN NOT NULL DEFAULT FALSE,
-    abandonned BOOLEAN NOT NULL DEFAULT FALSE,
+    abandoned BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
